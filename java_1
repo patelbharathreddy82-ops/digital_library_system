@@ -1,0 +1,127 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Book class
+class Book {
+    private int id;
+    private String title;
+    private String author;
+    private boolean isAvailable;
+
+    public Book(int id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isAvailable = true;
+    }
+
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public boolean isAvailable() { return isAvailable; }
+
+    public void borrowBook() { this.isAvailable = false; }
+    public void returnBook() { this.isAvailable = true; }
+
+    @Override
+    public String toString() {
+        return "Book ID: " + id + ", Title: " + title + ", Author: " + author +
+               ", Available: " + (isAvailable ? "Yes" : "No");
+    }
+}
+
+// BookManager class
+class BookManager {
+    private List<Book> books = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+        System.out.println("Book added successfully!");
+    }
+
+    public void displayBooks() {
+        if (books.isEmpty()) {
+            System.out.println("No books available.");
+        } else {
+            for (Book book : books) {
+                System.out.println(book);
+            }
+        }
+    }
+
+    public void borrowBook(int id) {
+        for (Book book : books) {
+            if (book.getId() == id && book.isAvailable()) {
+                book.borrowBook();
+                System.out.println("You borrowed: " + book.getTitle());
+                return;
+            }
+        }
+        System.out.println("Book not available or invalid ID.");
+    }
+
+    public void returnBook(int id) {
+        for (Book book : books) {
+            if (book.getId() == id && !book.isAvailable()) {
+                book.returnBook();
+                System.out.println("You returned: " + book.getTitle());
+                return;
+            }
+        }
+        System.out.println("Invalid book ID or book was not borrowed.");
+    }
+}
+
+// Main class
+public class BookManagementSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        BookManager manager = new BookManager();
+
+        while (true) {
+            System.out.println("\n--- Book Management System ---");
+            System.out.println("1. Add Book");
+            System.out.println("2. Display Books");
+            System.out.println("3. Borrow Book");
+            System.out.println("4. Return Book");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Book ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Title: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Enter Author: ");
+                    String author = scanner.nextLine();
+                    manager.addBook(new Book(id, title, author));
+                    break;
+                case 2:
+                    manager.displayBooks();
+                    break;
+                case 3:
+                    System.out.print("Enter Book ID to borrow: ");
+                    int borrowId = scanner.nextInt();
+                    manager.borrowBook(borrowId);
+                    break;
+                case 4:
+                    System.out.print("Enter Book ID to return: ");
+                    int returnId = scanner.nextInt();
+                    manager.returnBook(returnId);
+                    break;
+                case 5:
+                    System.out.println("Exiting system...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+}

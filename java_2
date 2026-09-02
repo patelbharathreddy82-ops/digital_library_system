@@ -1,0 +1,127 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Member class
+class Member {
+    private int id;
+    private String name;
+    private String email;
+    private boolean isActive;
+
+    public Member(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.isActive = true; // default active when created
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public boolean isActive() { return isActive; }
+
+    public void deactivate() { this.isActive = false; }
+    public void activate() { this.isActive = true; }
+
+    @Override
+    public String toString() {
+        return "Member ID: " + id + ", Name: " + name + ", Email: " + email +
+               ", Status: " + (isActive ? "Active" : "Inactive");
+    }
+}
+
+// MemberManager class
+class MemberManager {
+    private List<Member> members = new ArrayList<>();
+
+    public void addMember(Member member) {
+        members.add(member);
+        System.out.println("Member added successfully!");
+    }
+
+    public void displayMembers() {
+        if (members.isEmpty()) {
+            System.out.println("No members found.");
+        } else {
+            for (Member member : members) {
+                System.out.println(member);
+            }
+        }
+    }
+
+    public void deactivateMember(int id) {
+        for (Member member : members) {
+            if (member.getId() == id && member.isActive()) {
+                member.deactivate();
+                System.out.println("Member deactivated: " + member.getName());
+                return;
+            }
+        }
+        System.out.println("Invalid ID or member already inactive.");
+    }
+
+    public void activateMember(int id) {
+        for (Member member : members) {
+            if (member.getId() == id && !member.isActive()) {
+                member.activate();
+                System.out.println("Member activated: " + member.getName());
+                return;
+            }
+        }
+        System.out.println("Invalid ID or member already active.");
+    }
+}
+
+// Main class
+public class MemberManagementSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        MemberManager manager = new MemberManager();
+
+        while (true) {
+            System.out.println("\n--- Member Management System ---");
+            System.out.println("1. Add Member");
+            System.out.println("2. Display Members");
+            System.out.println("3. Deactivate Member");
+            System.out.println("4. Activate Member");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Member ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Email: ");
+                    String email = scanner.nextLine();
+                    manager.addMember(new Member(id, name, email));
+                    break;
+                case 2:
+                    manager.displayMembers();
+                    break;
+                case 3:
+                    System.out.print("Enter Member ID to deactivate: ");
+                    int deactivateId = scanner.nextInt();
+                    manager.deactivateMember(deactivateId);
+                    break;
+                case 4:
+                    System.out.print("Enter Member ID to activate: ");
+                    int activateId = scanner.nextInt();
+                    manager.activateMember(activateId);
+                    break;
+                case 5:
+                    System.out.println("Exiting system...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+}

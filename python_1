@@ -1,0 +1,36 @@
+from collections import Counter
+
+# Sample dataset: each record represents a transaction
+usage_data = [
+    {"book_id": 1, "member_id": 101, "status": "borrowed"},
+    {"book_id": 2, "member_id": 102, "status": "returned"},
+    {"book_id": 3, "member_id": 101, "status": "borrowed"},
+    {"book_id": 1, "member_id": 103, "status": "borrowed"},
+    {"book_id": 2, "member_id": 101, "status": "borrowed"},
+    {"book_id": 3, "member_id": 104, "status": "borrowed"},
+]
+
+def analyze_usage(data):
+    # Count borrowed books
+    borrowed_books = [record["book_id"] for record in data if record["status"] == "borrowed"]
+    active_members = [record["member_id"] for record in data if record["status"] == "borrowed"]
+
+    # Overall stats
+    print("📊 Usage Analysis Report")
+    print(f"Total borrowed books: {len(borrowed_books)}")
+    print(f"Unique active members: {len(set(active_members))}")
+
+    # Most borrowed books
+    book_counter = Counter(borrowed_books)
+    if book_counter:
+        most_borrowed = book_counter.most_common(1)[0]
+        print(f"Most borrowed book ID: {most_borrowed[0]} (borrowed {most_borrowed[1]} times)")
+
+    # Most active member
+    member_counter = Counter(active_members)
+    if member_counter:
+        most_active = member_counter.most_common(1)[0]
+        print(f"Most active member ID: {most_active[0]} (borrowed {most_active[1]} books)")
+
+if __name__ == "__main__":
+    analyze_usage(usage_data)
